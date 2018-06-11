@@ -16,15 +16,24 @@ set :views, Proc.new { File.join(root, "../views/") }
     end
 
     post '/signup' do
-      params.each do |key, param|
-        if param.empty?
-          redirect '/failure'
-        else
-          @user = User.create(params)
-          redirect '/tweets'
-        end
+
+      @user = User.new(username: params[:username], email: params[:email], password: params[:password])
+      # create(params)
+      binding.pry
+        if @user.save
+         redirect '/tweets'
+       else
+         redirect '/failure'
+       end
+      # params.each do |key, param|
+      #   if param.empty?
+      #     redirect '/failure'
+      #   else
+      #     @user = User.create(params)
+      #     redirect '/tweets'
+      #   end
       end
-    end
+
 
 
 
