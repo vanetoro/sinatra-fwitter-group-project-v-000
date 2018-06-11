@@ -1,10 +1,20 @@
-require './config/environment'
-
 class ApplicationController < Sinatra::Base
+set :views, Proc.new { File.join(root, "../views/") }
+    get '/' do
 
-  configure do
-    set :public_folder, 'public'
-    set :views, 'app/views'
+    erb :index
   end
+
+    get '/signup' do
+
+      erb :signup
+    end
+
+    post '/signup' do
+
+      redirect '/'
+    end
+
+
 
 end
