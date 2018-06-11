@@ -10,9 +10,20 @@ set :views, Proc.new { File.join(root, "../views/") }
       erb :signup
     end
 
+    get '/failure' do
+
+      erb :failure
+    end
+
     post '/signup' do
-      @user = User.create(params)
-        redirect '/tweets'
+      params.each do |key, param|
+        if param.empty?
+          redirect '/failure'
+        else
+          @user = User.create(params)
+          redirect '/tweets'
+        end
+      end
     end
 
 
