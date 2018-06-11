@@ -11,8 +11,8 @@ set :views, Proc.new { File.join(root, "../views/") }
     end
 
     post '/signup' do
-
-      redirect '/'
+      @user = User.create(params)
+        redirect '/tweets'
     end
 
 
