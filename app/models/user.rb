@@ -11,12 +11,6 @@ class User < ActiveRecord::Base
     User.all.detect{|u|u.slug == username }
   end
 
-  def current_user
 
-  end
-
-  def logged_in?
-
-  end
 
 end
