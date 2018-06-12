@@ -28,6 +28,12 @@ set :views, Proc.new { File.join(root, "../views/") }
       end
     end
 
+    get '/user/:slug' do
+      binding.pry
+       erb :tweets
+    end
+
+
     get '/tweets' do
       if !!session[:user_id]
         @user = User.find(session[:user_id])
