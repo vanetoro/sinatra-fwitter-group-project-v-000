@@ -27,15 +27,24 @@ set :views, Proc.new { File.join(root, "../views/") }
       end
     end
 
+    get '/new' do
+      if Helpers.logged_in?(session)
+        binding.pry
+        erb :index
+      else
+        redirect '/login'
+      end
+    end
+
     # get '/user/:slug' do
     #   binding.pry
     #    erb :show
     # end
 
    get '/tweets' do
-     if Helpers.logged_in?
+     if Helpers.logged_in?(session)
        @user = User.find(session[:user_id])
-       @tweets = Tweets.all
+       @tweets = Tweet.all
       erb :tweets
      else
        redirect '/login'
@@ -68,37 +77,12 @@ set :views, Proc.new { File.join(root, "../views/") }
 
 
     get "/users/:slug" do
-
       @user = User.find_by_slug(params[:slug])
       @tweets = @user.tweets
       erb :show
     end
 
     post '/login' do
-      @user = User.find_by(username: params[:username])
-      if @user.authenticate(params[:password])
-        session[:user_id] = @user.id
-
-        redirect '/tweets'
-      else
-        redirect '/login'
-      end
-    end
-
-    post '/signup' do
-      if params[:username].empty? || params[:email].empty? || params[:password].empty?
-        redirect '/signup'
-      else
-        @user = User.create(params)
-        session[:user_id] = @user.id
-        redirect '/tweets'
-      end
-    end
-
-
-
-    post '/login' do
-      binding.pry
       @user = User.find_by(username: params[:username])
       if @user.authenticate(params[:password])
         session[:user_id] = @user.id
