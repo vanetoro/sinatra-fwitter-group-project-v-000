@@ -58,7 +58,15 @@ set :views, Proc.new { File.join(root, "../views/") }
       end
     end
 
-    post '/logout' do
+    get "/users/:slug" do
+      
+      @user = User.find_by_slug(params[:slug])
+      @tweets = @user.tweets
+
+      erb :show
+    end
+
+    get '/logout' do
       session.clear
       redirect '/login'
     end
