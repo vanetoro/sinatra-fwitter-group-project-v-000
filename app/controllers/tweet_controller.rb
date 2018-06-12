@@ -1,6 +1,6 @@
 
 class TweetsController < Sinatra::Base
-set :views, Proc.new { File.join(root, "../views/users") }
+set :views, Proc.new { File.join(root, "../views/tweets") }
 
   configure do
     enable :sessions
@@ -17,14 +17,14 @@ set :views, Proc.new { File.join(root, "../views/users") }
     end
  end
 
-get '/new' do
-  if Helpers.logged_in?(session)
-    binding.pry
-    erb :index
-  else
-    redirect '/users/login'
-  end
-end
+ get '/new' do
+   if Helpers.logged_in?(session)
+     binding.pry
+       erb :create_tweet
+   else
+     redirect '/login'
+   end
+ end
 
 
 end

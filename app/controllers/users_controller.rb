@@ -16,8 +16,7 @@ set :views, Proc.new { File.join(root, "../views/users") }
 
   get '/login' do
     if Helpers.logged_in?(session)
-      binding.pry
-      redirect :'/tweets/tweets'
+        redirect :'/tweets/tweets'
     else
       erb :login
     end
@@ -30,17 +29,25 @@ set :views, Proc.new { File.join(root, "../views/users") }
     else
       @user = User.create(params)
       session[:user_id] = @user.id
-      redirect '../tweets/tweets'
+      redirect '/tweets/tweets'
     end
+  end
 
-    post '/users/login' do
+    post '/login' do
       @user = User.find_by(username: params[:username])
       if @user.authenticate(params[:password])
         session[:user_id] = @user.id
-
-        redirect '/tweets'
+        redirect '/tweets/tweets'
       else
         redirect '/users/login'
+      end
+    end
+
+    get '/new' do
+      if Helpers.logged_in?(session)
+          erb :'/tweets/create_tweet'
+      else
+        redirect '/login'
       end
     end
 
@@ -49,7 +56,7 @@ set :views, Proc.new { File.join(root, "../views/users") }
       redirect '/login'
     end
 
-  end
+
 
 
 end
