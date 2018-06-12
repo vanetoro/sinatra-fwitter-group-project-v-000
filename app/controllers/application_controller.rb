@@ -1,40 +1,65 @@
 class ApplicationController < Sinatra::Base
 set :views, Proc.new { File.join(root, "../views/") }
-    get '/' do
 
-    erb :index
+
+  configure do
+    enable :sessions
+    set :session_secret, "my_little_secret"
   end
 
-    get '/signup' do
+    get '/' do
 
-      erb :signup
+      erb :index
     end
 
-    get '/failure' do
+    get '/signup' do
+      if !!session[:user_id]
+        redirect '/tweets'
+      else
+        erb :signup
+      end
+    end
 
-      erb :failure
+    get '/login' do
+      if !!session[:user_id]
+        redirect '/tweets'
+      else
+        erb :login
+      end
+    end
+
+    get '/tweets' do
+      if !!session[:user_id]
+        @user = User.find(session[:user_id])
+       erb :tweets
+      else
+        redirect '/login'
+      end
+   end
+
+    post '/login' do
+      @user = User.find_by(username: params[:username])
+      if @user.authenticate(params[:password])
+        session[:user_id] = @user.id
+
+        redirect '/tweets'
+      else
+        redirect '/login'
+      end
     end
 
     post '/signup' do
-
-      @user = User.new(username: params[:username], email: params[:email], password: params[:password])
-      # create(params)
-      binding.pry
-        if @user.save
-         redirect '/tweets'
-       else
-         redirect '/failure'
-       end
-      # params.each do |key, param|
-      #   if param.empty?
-      #     redirect '/failure'
-      #   else
-      #     @user = User.create(params)
-      #     redirect '/tweets'
-      #   end
+      if params[:username].empty? || params[:email].empty? || params[:password].empty?
+        redirect '/signup'
+      else
+        @user = User.create(params)
+        session[:user_id] = @user.id
+        redirect '/tweets'
       end
+    end
 
-
-
-
+    post '/logout' do
+      session.clear
+      redirect '/login'
+    end
 end
