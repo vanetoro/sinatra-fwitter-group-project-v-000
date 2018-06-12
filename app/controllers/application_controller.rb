@@ -31,11 +31,22 @@ set :views, Proc.new { File.join(root, "../views/") }
     get '/tweets' do
       if !!session[:user_id]
         @user = User.find(session[:user_id])
+        @tweets = @user.tweets
        erb :tweets
       else
         redirect '/login'
       end
    end
+
+    get "/tweets/:id" do
+      binding.pry
+      @user = User.find_by_slug(params[:slug])
+      @tweets = @user.tweets
+
+      erb :show
+    end
+
+
 
     post '/login' do
       @user = User.find_by(username: params[:username])
@@ -58,12 +69,44 @@ set :views, Proc.new { File.join(root, "../views/") }
       end
     end
 
-    get "/users/:slug" do
-      
-      @user = User.find_by_slug(params[:slug])
-      @tweets = @user.tweets
 
-      erb :show
+
+    get '/login' do
+
+      erb :login
+    end
+
+    get '/tweets' do
+      if !!session[:user_id]
+        @user = User.find(session[:user_id])
+        binding.pry
+        @tweets = @user.tweets
+       erb :tweets
+      else
+        redirect '/login'
+      end
+   end
+
+    post '/login' do
+      binding.pry
+      @user = User.find_by(username: params[:username])
+      if @user.authenticate(params[:password])
+        session[:user_id] = @user.id
+
+        redirect '/tweets'
+      else
+        redirect '/login'
+      end
+    end
+
+    post '/signup' do
+      if params[:username].empty? || params[:email].empty? || params[:password].empty?
+        redirect '/signup'
+      else
+        @user = User.create(params)
+        session[:user_id] = @user.id
+        redirect '/tweets'
+      end
     end
 
     get '/logout' do
