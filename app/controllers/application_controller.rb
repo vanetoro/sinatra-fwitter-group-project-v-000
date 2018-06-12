@@ -50,22 +50,11 @@ set :views, Proc.new { File.join(root, "../views/") }
     # end
 
     get '/show/:user' do
-      binding.pry
       Helpers.current_user(session)
 
       erb :show
     end
 
-    post '/login' do
-      @user = User.find_by(username: params[:username])
-      if @user.authenticate(params[:password])
-        session[:user_id] = @user.id
-
-        redirect '/tweets'
-      else
-        redirect '/login'
-      end
-    end
 
     post '/signup' do
       if params[:username].empty? || params[:email].empty? || params[:password].empty?
@@ -85,10 +74,7 @@ set :views, Proc.new { File.join(root, "../views/") }
       erb :show
     end
 
-
-
     post '/login' do
-      binding.pry
       @user = User.find_by(username: params[:username])
       if @user.authenticate(params[:password])
         session[:user_id] = @user.id
@@ -109,10 +95,7 @@ set :views, Proc.new { File.join(root, "../views/") }
       end
     end
 
-    get '/login' do
 
-      erb :login
-    end
 
     post '/login' do
       binding.pry
