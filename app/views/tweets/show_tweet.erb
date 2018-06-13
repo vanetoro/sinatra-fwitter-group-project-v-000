@@ -1,3 +1,7 @@
 <h3>Single tweet info</h3>
 Tweet: <%=@tweet.content%></br>
 Tweeted by user: <%=@tweet.user.username%></br>
+<form action="/tweet/delete" method="post">
+  <input type="hidden" id="hidden" name="_method" value="patch">
+  <input type="submit" value="Delete Tweet">
+</form>
