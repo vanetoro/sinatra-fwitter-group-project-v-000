@@ -23,6 +23,7 @@ set :views, Proc.new { File.join(root, "../views/") }
    end
 
    get '/tweets/new' do
+     binding.pry
      if Helpers.logged_in?(session)
        @user = User.find(session[:user_id])
        erb :'/tweets/create_tweet'
