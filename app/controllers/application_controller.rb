@@ -31,11 +31,6 @@ set :views, Proc.new { File.join(root, "../views/") }
      end
    end
 
-   post '/tweets' do
-     @tweet = Tweet.create(params)
-     binding.pry
-   end
-
    get "/tweets/:id" do
        @tweet = Tweet.find(params[:id])
 
@@ -64,7 +59,6 @@ set :views, Proc.new { File.join(root, "../views/") }
       end
     end
 
-    # works
     post '/signup' do
       if params[:username].empty? || params[:email].empty? || params[:password].empty?
         redirect '/signup'
@@ -95,9 +89,10 @@ set :views, Proc.new { File.join(root, "../views/") }
 
       post "/users/:slug" do
         @user = User.find_by_slug(params[:slug])
-      binding.pry
-
-          erb :"/users/show"
+        @tweet = Tweet.create(content: params[:content])
+        @tweet.user = @user
+        @user.save
+        redirect "/users/show"
       end
 
 
