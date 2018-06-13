@@ -18,17 +18,16 @@ set :views, Proc.new { File.join(root, "../views/") }
         @tweets = Tweet.all
          erb :'/tweets/tweets'
       else
-        redirect '/users/login'
+        redirect '/login'
       end
    end
 
    get '/tweets/new' do
-     binding.pry
      if Helpers.logged_in?(session)
        @user = User.find(session[:user_id])
        erb :'/tweets/create_tweet'
      else
-       redirect '/users/login'
+       redirect '/login'
      end
    end
 
@@ -91,7 +90,8 @@ set :views, Proc.new { File.join(root, "../views/") }
       post "/users/:slug" do
         @user = User.find_by_slug(params[:slug])
         @tweet = Tweet.create(content: params[:content])
-        @tweet.user = @user
+        binding.pry
+        @user.tweets << @tweet
         @user.save
         redirect "/users/show"
       end

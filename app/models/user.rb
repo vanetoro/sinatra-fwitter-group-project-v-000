@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   end
 
   def User.find_by_slug(username) #why doesn't this work with Self?
-    User.all.detect{|u|u.slug.downcase == username }
+    User.all.detect{|u|u.slug.downcase == username.downcase }
   end
 
 
