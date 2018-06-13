@@ -52,14 +52,18 @@ set :views, Proc.new { File.join(root, "../views/") }
 
 
 
-  patch '/tweets/:id' do
-    @tweet = Tweet.find(params[:id])
-    binding.pry
-    @user = @tweet.user
-    @tweet.content  = params[:content]
-    @tweet.save
-    redirect "/users/:slug"
-  end
+   patch '/tweets/:id' do
+     if !params[:content].empty?
+       @tweet = Tweet.find(params[:id])
+       @user = @tweet.user
+       @tweet.content  = params[:content]
+       @tweet.save
+       @user.save
+       redirect "/users/#{@user.slug}"
+    else
+      redirect '/tweets/#{@tweet.id}/edit'
+    end
+   end
 
 
 #---- Users Controls ------------#
