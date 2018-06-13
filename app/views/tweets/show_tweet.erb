@@ -1,4 +1,3 @@
-This is a single users tweets
-<%@tweets.each do |tweet| %>
-  <a href ='/tweets/<%=tweet.id%>'><%=tweet.content%></a>
-<%end%>
+<h3>Single tweet info</h3>
+Tweet: <%=@tweet.content%></br>
+Tweeted by user: <%=@tweet.user.username%></br>

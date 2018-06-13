@@ -16,63 +16,36 @@ set :views, Proc.new { File.join(root, "../views/") }
       if Helpers.logged_in?(session)
         @user = User.find(session[:user_id])
         @tweets = Tweet.all
-       erb :'/tweets/tweets'
+         erb :'/tweets/tweets'
       else
         redirect '/users/login'
       end
    end
 
-  #  get '/new' do
-  #    if Helpers.logged_in?(session)
-  #      binding.pry
-  #        erb :create_tweet
-  #    else
-  #      redirect '/login'
-  #    end
-  #  end
+   get '/tweets/new' do
+     if Helpers.logged_in?(session)
+       @user = User.find(session[:user_id])
+       erb :'/tweets/create_tweet'
+     else
+       redirect '/users/login'
+     end
+   end
 
-    # get '/users/signup' do
-    #   if Helpers.logged_in?(session)
-    #     redirect '/tweets/tweets'
-    #   else
-    #     erb :'/users/signup'
-    #   end
-    # end
+   post '/tweets' do
+     @tweet = Tweet.create(params)
+     binding.pry
+   end
 
-    # get '/users/login' do
-    #   if Helpers.logged_in?(session)
-    #     redirect 'tweets/tweets'
-    #   else
-    #     erb :'/users/login'
-    #   end
-    # end
+   get "/tweets/:id" do
+       @tweet = Tweet.find(params[:id])
 
-
-
-    # get '/user/:slug' do
-    #   binding.pry
-    #    erb :show
-    # end
-
-
-
-    # get "/tweets/:id" do
-    #   @user = User.find_by_slug(params[:slug])
-    #   @tweets = @user.tweets
-    #
-    #   erb :show
-    # end
+     erb :'/tweets/show_tweet'
+   end
 
 
 
 
 
-
-    # get "/users/:slug" do
-    #   @user = User.find_by_slug(params[:slug])
-    #   @tweets = @user.tweets
-    #   erb :show
-    # end
 #---- Users Controls ------------#
     get '/signup' do
       if Helpers.logged_in?(session)
@@ -85,7 +58,7 @@ set :views, Proc.new { File.join(root, "../views/") }
     get '/login' do
       if Helpers.logged_in?(session)
 
-          redirect :'/tweets/tweets'
+          redirect :'/tweets/tweet'
       else
         erb :'/users/login'
       end
@@ -98,7 +71,7 @@ set :views, Proc.new { File.join(root, "../views/") }
       else
         @user = User.create(params)
         session[:user_id] = @user.id
-        redirect '/tweets/tweets'
+        redirect '/tweets'
       end
     end
 
@@ -112,15 +85,22 @@ set :views, Proc.new { File.join(root, "../views/") }
         end
       end
 
-      get '/:user/show' do
-        binding.pry
-        if Helpers.current_user(session)
-          @user = User.find_by_slug(params[:user])
-          erb :show
-        else
-          redirect '/login'
-        end
+
+      get "/users/:slug" do
+        @user = User.find_by_slug(params[:slug])
+        @tweets = @user.tweets
+
+          erb :"/users/show"
       end
+
+      post "/users/:slug" do
+        @user = User.find_by_slug(params[:slug])
+      binding.pry
+
+          erb :"/users/show"
+      end
+
+
 
       get '/logout' do
         session.clear

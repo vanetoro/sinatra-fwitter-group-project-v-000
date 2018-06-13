@@ -6,7 +6,7 @@ This is the tweets page!
 These are all the tweets!
 <%if @tweets%>
   <%@tweets.each do |tweet| %>
-    <a href ='/tweets/<%=tweet.id%>'><%=tweet.content%></a>
+    <a href ='/tweets/<%=tweet.id%>'><%=tweet.content%></a></br>
   <%end%>
 <%end%>
 
