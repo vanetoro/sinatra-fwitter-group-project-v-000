@@ -32,9 +32,21 @@ set :views, Proc.new { File.join(root, "../views/") }
    end
 
    get "/tweets/:id" do
+     if Helpers.logged_in?(session)
        @tweet = Tweet.find(params[:id])
+       erb :'/tweets/show_tweet'
+     else
+       redirect '/users/login'
+     end
+   end
 
-     erb :'/tweets/show_tweet'
+   get "/tweets/:id/edit" do
+     if Helpers.logged_in?(session) && Helpers.current_user(session)
+       @tweet = Tweet.find(params[:id])
+       erb :'/tweets/edit_tweet'
+     else
+       redirect '/users/login'
+     end
    end
 
 

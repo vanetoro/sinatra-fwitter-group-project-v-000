@@ -2,6 +2,10 @@
 Tweet: <%=@tweet.content%></br>
 Tweeted by user: <%=@tweet.user.username%></br>
 <form action="/tweet/delete" method="post">
-  <input type="hidden" id="hidden" name="_method" value="patch">
+  <input type="hidden" id="hidden" name="_method" value="delete">
   <input type="submit" value="Delete Tweet">
+</form>
+<form action="/tweet/delete" method="post">
+  <input type="hidden" id="hidden" name="_method" value="patch">
+  <input type="submit" value="Edit Tweet">
 </form>
