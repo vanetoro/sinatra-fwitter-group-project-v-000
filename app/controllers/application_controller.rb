@@ -36,7 +36,7 @@ set :views, Proc.new { File.join(root, "../views/") }
        @tweet = Tweet.find(params[:id])
        erb :'/tweets/edit_tweet'
      else
-       redirect '/users/login'
+       redirect '/login'
      end
    end
 
