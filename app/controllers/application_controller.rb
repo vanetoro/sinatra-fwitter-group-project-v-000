@@ -45,7 +45,7 @@ set :views, Proc.new { File.join(root, "../views/") }
        @tweet = Tweet.find(params[:id])
        erb :'/tweets/show_tweet'
      else
-       redirect '/users/login'
+       redirect '/login'
      end
    end
 
@@ -88,7 +88,7 @@ set :views, Proc.new { File.join(root, "../views/") }
       if Helpers.logged_in?(session)
           redirect :'/tweets'
       else
-        erb :'/login'
+        erb :'/users/login'
       end
     end
 
