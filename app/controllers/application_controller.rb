@@ -31,15 +31,6 @@ set :views, Proc.new { File.join(root, "../views/") }
      end
    end
 
-   get "/tweets/:id" do
-     if Helpers.logged_in?(session)
-       @tweet = Tweet.find(params[:id])
-       erb :'/tweets/show_tweet'
-     else
-       redirect '/users/login'
-     end
-   end
-
    get "/tweets/:id/edit" do
        if Helpers.logged_in?(session) && Helpers.current_user(session).id == session[:user_id]
        @tweet = Tweet.find(params[:id])
@@ -50,20 +41,40 @@ set :views, Proc.new { File.join(root, "../views/") }
      end
    end
 
+   get "/tweets/:id" do
+     if Helpers.logged_in?(session)
+       @tweet = Tweet.find(params[:id])
+       erb :'/tweets/show_tweet'
+     else
+       redirect '/users/login'
+     end
+   end
 
 
    patch '/tweets/:id' do
+      @tweet = Tweet.find(params[:id])
      if !params[:content].empty?
-       @tweet = Tweet.find(params[:id])
        @user = @tweet.user
        @tweet.content  = params[:content]
        @tweet.save
        @user.save
        redirect "/users/#{@user.slug}"
     else
-      redirect '/tweets/#{@tweet.id}/edit'
+      # binding.pry
+      redirect "/tweets/#{@tweet.id}/edit"
     end
    end
+
+  delete '/tweets/:id' do
+    @tweet = Tweet.find(params[:id])
+      if Helpers.current_user(session).id == @tweet.user_id
+        Tweet.destroy(@tweet.id)
+        redirect '/tweets'
+      else
+        redirect '/login'
+      end
+  end
+
 
 
 #---- Users Controls ------------#
@@ -77,10 +88,9 @@ set :views, Proc.new { File.join(root, "../views/") }
 
     get '/login' do
       if Helpers.logged_in?(session)
-
-          redirect :'/tweets/tweet'
+          redirect :'/tweets'
       else
-        erb :'/users/login'
+        erb :'users/login'
       end
     end
 
